@@ -2,6 +2,7 @@ package ru.samsung.itschool.dbgame;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -37,7 +38,6 @@ public class DBManager {
 	}
 
 
-
 	ArrayList<Result> getAllResults() {
 
 		ArrayList<Result> data = new ArrayList<Result>();
@@ -46,12 +46,25 @@ public class DBManager {
 
 		while (hasMoreData) {
 			String name = cursor.getString(cursor.getColumnIndex("USERNAME"));
-			int score = Integer.parseInt(cursor.getString(cursor
-					.getColumnIndex("SCORE")));
+			int score = Integer.parseInt(cursor.getString(cursor.getColumnIndex("SCORE")));
 			data.add(new Result(name, score));
 			hasMoreData = cursor.moveToNext();
 		}
+		return data;
+	}
 
+	ArrayList<Result> getHallResults(int minScore) {
+
+		ArrayList<Result> data = new ArrayList<Result>();
+		Cursor cursor = db.rawQuery("SELECT * FROM RESULTS WHERE SCORE > " + minScore + " ORDER BY SCORE DESC;", null);
+		boolean hasMoreData = cursor.moveToFirst();
+
+		while (hasMoreData) {
+			String name = cursor.getString(cursor.getColumnIndex("USERNAME"));
+			int score = Integer.parseInt(cursor.getString(cursor.getColumnIndex("SCORE")));
+			data.add(new Result(name, score));
+			hasMoreData = cursor.moveToNext();
+		}
 		return data;
 	}
 
@@ -59,9 +72,5 @@ public class DBManager {
 		db.execSQL("CREATE TABLE IF NOT EXISTS RESULTS (USERNAME TEXT, SCORE INTEGER);");
 	}
 
-	private boolean dbExist() {
-		File dbFile = context.getDatabasePath(DB_NAME);
-		return dbFile.exists();
-	}
 
 }

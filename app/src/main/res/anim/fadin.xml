@@ -7,12 +7,14 @@
         android:fromAlpha="0.0"
         android:toAlpha="1.0" >
     </alpha>
-     <rotate
+
+    <rotate
         android:duration="3000"
         android:fromDegrees="0"
         android:pivotX="50%"
         android:pivotY="50%"
         android:startOffset="0"
         android:toDegrees="3600" />
+
 
 </set>
